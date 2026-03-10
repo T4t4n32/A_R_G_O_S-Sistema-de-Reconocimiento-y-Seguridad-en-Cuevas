@@ -4,25 +4,37 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+.env
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
 
-# OS/IDE
+# OS / IDE
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
 
-# Data (runtime)
+# Runtime data (no versionar)
 data/
 logs/
 recordings/
+exports/
 *.log
 
-# Datasets (keep metadata, not raw)
+# Datasets (no crudos por defecto)
 datasets/raw/
 datasets/tmp/
+datasets/exports/
 
-# Exports
-exports/
+# Builds / misc
+dist/
+build/
+
+# Carpetas internas que NO deben verse en el repo
+.calibots-kairos-platform/
+.obsidian/
+.github/workflows/
+
+# Evitar subir repos anidados por error (si alguien zipea con .git dentro)
+**/.git/
