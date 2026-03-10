@@ -1,69 +1,262 @@
-# ARGOS V1 — Sistema de Reconocimiento y Seguridad en Cuevas
+````md
+# ARGOS V1 — Sistema Integral de Reconocimiento y Seguridad en Cuevas
 
-ARGOS V1 es un prototipo tecnológico diseñado por **CALIBOTS KAIROS** para convertir la exploración subterránea en un proceso más **seguro, medible y trazable**.
+**ARGOS V1** es un prototipo funcional de **seguridad operativa** para exploración en entornos tipo cueva. Convierte una exploración incierta en un proceso **medible, trazable y comunicable** mediante un protocolo claro:
 
-El proyecto se basa en un principio simple:
-**medir → decidir → alertar → registrar evidencia**.
+**Medir → Decidir → Alertar → Registrar evidencia**
 
-## Qué hace ARGOS (en 30 segundos)
-ARGOS operacionaliza la seguridad en 3 momentos:
+> Estado: **Operativo (V1)** sobre **Raspberry Pi 5**.
 
-- **Antes:** evaluación inicial del entorno (estado de riesgo y autodiagnóstico).
-- **Durante:** monitoreo continuo + anti-colisión + telemetría + evidencia.
-- **Después:** reporte final con logs y hallazgos para análisis y mejora.
+---
 
-## Por qué importa
-En entornos tipo cueva o “espacio confinado” pueden existir riesgos que no se detectan a simple vista:
-baja visibilidad, obstáculos y, especialmente, condiciones de aire peligrosas.
+## Contenido
+- [Qué es ARGOS](#qué-es-argos)
+- [Qué resuelve](#qué-resuelve)
+- [Cómo funciona](#cómo-funciona)
+- [Ventajas](#ventajas)
+- [Impacto](#impacto)
+- [Requisitos](#requisitos)
+- [Instalación y ejecución](#instalación-y-ejecución)
+- [Configuración](#configuración)
+- [Salidas y evidencias](#salidas-y-evidencias)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
+- [Seguridad](#seguridad)
+- [Créditos](#créditos)
 
-ARGOS V1 no busca “reemplazar” equipos certificados: busca crear una solución educativa, escalable y demostrable, que ayude a tomar decisiones con datos y a dejar evidencia.
+---
 
-## Estado del proyecto (hoy)
-- Repositorio y documentación formal listos.
-- Prototipo en ejecución sobre **Raspberry Pi 5**.
-- Integraciones por completar/estabilizar: LoRa, sensores (lecturas estables), pipeline de visión, reporte final “one-click”.
+## Qué es ARGOS
+ARGOS V1 es un sistema que **evalúa y monitorea** condiciones relevantes para seguridad en entornos subterráneos, emite **alertas operacionales** y genera **evidencia verificable** (logs + capturas) para análisis posterior.
 
-## Hardware objetivo (V1)
-- **Raspberry Pi 5** (plataforma principal)
-- Cámara (Webcam USB o iPhone solo como soporte para demo)
+ARGOS opera en 3 momentos:
+- **Antes:** autodiagnóstico + evaluación inicial del entorno (estado de riesgo).
+- **Durante:** monitoreo continuo + anti-colisión + telemetría LoRa + evidencia.
+- **Después:** reporte final de sesión y trazabilidad de eventos.
+
+---
+
+## Qué resuelve
+En cuevas y entornos similares, los riesgos más críticos suelen combinar:
+- condiciones ambientales que pueden deteriorarse (aire/temperatura/ventilación),
+- baja visibilidad y obstáculos (colisiones/atascos),
+- pérdida de comunicación,
+- ausencia de evidencia técnica para analizar incidentes y mejorar protocolos.
+
+ARGOS V1 responde con un flujo operativo repetible: **datos → decisiones → alertas → evidencia**.
+
+---
+
+## Cómo funciona
+ARGOS sigue una arquitectura simple y robusta:
+
+**Sensores + Cámara → Raspberry Pi 5 → Motor de riesgo → LoRa (telemetría crítica) + Evidencias (logs/capturas) → Reporte final**
+
+### Módulos V1
+- **Sensado ambiental**
+  - BME280: temperatura/humedad/presión
+  - MQ-135: proxy cualitativo de “aire degradado” (no mide O₂)
+- **Mitigación física**
+  - VL53L0X (ToF): distancia y alerta por proximidad (anti-colisión)
+- **Visión + evidencia**
+  - Cámara + iluminación (linterna/LED): detección y registro de eventos/anomalías
+- **Telemetría crítica**
+  - LoRa 433 MHz: estado y alertas en paquetes cortos
+- **Trazabilidad**
+  - Logs con timestamp + capturas + reporte de sesión (CSV/JSON)
+
+---
+
+## Ventajas
+- **Operación clara:** protocolo antes–durante–después.
+- **Telemetría robusta:** canal crítico LoRa 433 MHz (independiente de internet).
+- **Evidencia real:** logs y capturas para auditoría y mejora.
+- **Escalable:** V1 demuestra integración; V2/V3 pueden mejorar sensores, carcasa y cobertura.
+- **Enfoque educativo-profesional:** diseñado para trabajo STEM/FLL con rigor y documentación.
+
+---
+
+## Impacto
+ARGOS V1 aporta valor en:
+- **prevención** (datos antes de operar),
+- **mitigación** (alertas durante),
+- **aprendizaje y mejora** (evidencia después),
+- **transferencia educativa** (documentación formal para replicar y evolucionar el sistema).
+
+---
+
+## Requisitos
+
+### Hardware V1 (objetivo)
+- Raspberry Pi 5
+- Cámara: webcam USB (principal) / iPhone (solo soporte de demo si se usa)
 - 4 motores (tracción) + driver
-- Sensores: **BME280** (T/H), **MQ-135** (proxy aire), **VL53L0X** (ToF distancia)
-- **LoRa 433 MHz** (telemetría crítica)
-- Iluminación (linterna / LED)
+- Sensores:
+  - BME280
+  - MQ-135
+  - VL53L0X
+- LoRa 433 MHz
+- Iluminación (linterna/LED)
 
-> Nota: MQ-135 es un indicador cualitativo (proxy). No mide O2 y no es selectivo.
+### Software
+- Raspberry Pi OS (recomendado 64-bit)
+- Python 3
+- Dependencias Python (ver `software/requirements.txt`)
 
-## Raspberry Pi 5: consideraciones técnicas mínimas
-- Sistema recomendado: Raspberry Pi OS reciente (64-bit recomendado).
-- Para estabilidad: fuente USB-C PD de 5A recomendada cuando se usan periféricos exigentes.
-- Sensores por I2C requieren habilitar interfaz (raspi-config o GUI).
-- Para cámara CSI, el stack recomendado es libcamera/Picamera2 (no “legacy camera stack”).
+---
 
-(Ver referencias oficiales en `docs/referencias/`.)
+## Instalación y ejecución
 
-## Estructura del repositorio (estable)
-- `docs/` Documentación oficial (tesis por capítulos, seguridad, plantillas, releases)
-- `software/` Código en Raspberry Pi 5 (Python). El prototipo inicial vive en `software/legacy/`
-- `hardware/` Cableado, BOM, mecánica, notas de montaje
-- `assets/` Identidad visual y medios (logos, renders)
-- `datasets/` Metadatos y guías de dataset (no subir crudos por defecto)
-- `deploy/` Servicios y despliegue en Pi (systemd, notas de instalación)
-- `tests/` Pruebas unitarias/integra (crece con el tiempo)
+### 1) Clonar el repositorio
+```bash
+git clone <URL_DEL_REPO>
+cd ARGOS
+````
 
-## Quick start (Raspberry Pi)
-1) Ir a `software/`
-2) Crear venv: `python3 -m venv .venv && source .venv/bin/activate`
-3) Instalar deps: `pip install -r requirements.txt`
-4) Config: `cp config/argos.example.yaml config/argos.yaml`
-5) Ejecutar: `python -m argos_app --mode simulated`
+### 2) Preparar el entorno (Raspberry Pi)
 
-Para modo hardware: `python -m argos_app --mode hardware`
-(Primero completar los módulos de sensores/comms/vision.)
+```bash
+cd software
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-## Seguridad (leer antes de probar)
-ARGOS V1 es un prototipo educativo. No usarlo para autorizar ingreso a cuevas reales.
-Ver `SECURITY.md` y `docs/seguridad/`.
+### 3) Configurar
 
-## Contacto
-Proyecto desarrollado por CALIBOTS KAIROS (Colegio Comfandi El Prado, Cali).
-Coaches/Mentores: Richard Suárez, Diego.
+```bash
+cp config/argos.example.yaml config/argos.yaml
+```
+
+### 4) Ejecutar (modo hardware)
+
+```bash
+python -m argos_app --mode hardware
+```
+
+### 5) Ejecutar (modo simulado / pruebas sin hardware)
+
+```bash
+python -m argos_app --mode simulated
+```
+
+---
+
+## Configuración
+
+La configuración vive en:
+
+* `software/config/argos.yaml`
+
+Ahí se definen:
+
+* buses I2C/SPI,
+* direcciones de sensores,
+* pines de motores y luz,
+* parámetros de telemetría,
+* umbrales operativos.
+
+Archivo de ejemplo:
+
+* `software/config/argos.example.yaml`
+
+---
+
+## Salidas y evidencias
+
+ARGOS genera evidencia de sesión de forma automática:
+
+* **Logs**
+
+  * ubicados en `data/logs/` (no versionado)
+  * incluyen timestamps y eventos (estado, alertas, telemetría, visión)
+
+* **Evidencias (capturas)**
+
+  * ubicadas en `data/evidence/` (no versionado)
+  * capturas asociadas a eventos (p. ej. anomalía)
+
+* **Reporte final**
+
+  * resumen de máximos/mínimos, alertas y estabilidad del enlace
+  * exportable por Wi-Fi cuando esté disponible
+
+> Detalles de formatos y plantillas: `docs/plantillas/` y `docs/seguridad/`.
+
+---
+
+## Estructura del repositorio
+
+Estructura estable del proyecto:
+
+```
+ARGOS/
+├── README.md
+├── VERSION
+├── CHANGELOG.md
+├── LICENSE.md
+├── SECURITY.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── assets/
+│   └── brand/
+├── docs/
+│   ├── tesis/
+│   ├── arquitectura/
+│   ├── seguridad/
+│   ├── plantillas/
+│   ├── referencias/
+│   ├── releases/
+│   └── identidad/
+├── software/
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── config/
+│   ├── legacy/
+│   └── src/
+├── hardware/
+├── datasets/
+├── deploy/
+└── tests/
+```
+
+---
+
+## Contribuir
+
+Contribuciones se aceptan con enfoque profesional: cambios pequeños, evidencia y documentación.
+
+* Guía completa: `CONTRIBUTING.md`
+* Bitácora/formatos: `docs/plantillas/`
+* Release notes: `docs/releases/`
+
+### Estándar mínimo para un cambio aceptado
+
+* descripción del cambio,
+* prueba rápida (log/video/foto),
+* actualización del changelog si aplica.
+
+---
+
+## Licencia
+
+Ver `LICENSE.md`.
+
+---
+
+## Seguridad
+
+ARGOS V1 es un prototipo educativo. No reemplaza instrumentos certificados ni autoriza ingreso a cuevas reales.
+Política y advertencias: `SECURITY.md` y `docs/seguridad/`.
+
+---
+
+## Créditos
+
+Proyecto desarrollado por **CALIBOTS KAIROS** — Colegio Comfandi El Prado (Cali, Valle del Cauca, Colombia).
+
+Mentores/Coaches:
+
+* Richard Suárez
+* Diego

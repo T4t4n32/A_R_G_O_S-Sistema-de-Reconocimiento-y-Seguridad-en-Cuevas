@@ -15,26 +15,19 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Runtime data (no versionar)
+# Runtime data
 data/
 logs/
 recordings/
 exports/
 *.log
 
-# Datasets (no crudos por defecto)
+# Dataset (no crudos)
 datasets/raw/
 datasets/tmp/
 datasets/exports/
 
-# Builds / misc
-dist/
-build/
-
-# Carpetas internas que NO deben verse en el repo
+# Local-only folders (policy)
 .calibots-kairos-platform/
 .obsidian/
 .github/workflows/
-
-# Evitar subir repos anidados por error (si alguien zipea con .git dentro)
-**/.git/

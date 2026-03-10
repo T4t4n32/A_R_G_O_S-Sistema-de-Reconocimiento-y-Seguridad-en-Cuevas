@@ -1,39 +1,29 @@
 # Contributing — ARGOS V1
 
-Este repositorio busca estabilidad: cambios pequeños, bien documentados y con evidencia.
+Este repositorio mantiene una estructura estable. Los cambios se registran con evidencia y sin reorganizar carpetas.
 
-## Reglas rápidas
-1) Una tarea = un PR (o un commit claro si trabajan local).
-2) No romper estructura del repo sin aprobación del equipo.
-3) Todo cambio técnico debe dejar evidencia:
-   - logs, video, fotos, o reporte de prueba (según aplique).
-4) Actualiza `CHANGELOG.md` cuando el cambio sea “visible” o afecte el uso.
-
-## Flujo recomendado (Git)
-- Branch: `feature/<tema>` o `fix/<tema>`
-- Commits cortos y descriptivos
-- Merge solo si:
-  - compila/ejecuta (mínimo)
-  - hay evidencia de prueba (cuando aplique)
+## Reglas
+- Cambios pequeños, commits claros.
+- Documentación actualizada cuando cambie comportamiento.
+- Evidencia mínima por cambio (logs, foto, video o reporte de prueba).
 
 ## Dónde va cada cosa
 - Documentación: `docs/`
-- Código Pi 5: `software/`
-- Cableado y BOM: `hardware/`
-- Logos/medios: `assets/`
-- Despliegue Pi: `deploy/`
-- Dataset: `datasets/` (no subir crudos por defecto)
+- Código Raspberry Pi 5: `software/`
+- Cableado/BOM/mecánica: `hardware/`
+- Logos y medios: `assets/`
+- Despliegue: `deploy/`
+- Dataset: `datasets/` (no crudos por defecto)
 
-## Estándares de código (Python)
-- Mantener módulos pequeños y legibles.
-- Evitar “scripts gigantes”. Si hay un prototipo único:
-  - guardarlo en `software/legacy/current_prototype.py`
-  - migrar poco a poco a `software/src/argos_app/`
+## Prototipo actual
+El código existente de una sola pieza vive en:
+- `software/legacy/current_prototype.py`
 
-## Pruebas mínimas antes de subir cambios
-- `python -m compileall software/src`
-- Ejecución en Pi (si toca hardware): iniciar y capturar logs.
-- Actualizar bitácora de iteraciones: `docs/plantillas/Bitacora_Iteraciones.md`
+Migración: se mueve funcionalidad a `software/src/` por módulos (sensores, comunicaciones, decisión, visión), sin borrar el archivo original.
 
-## Contacto interno
-Si un cambio afecta seguridad o hardware, validar primero con coaches/mentores.
+## Comando (si una carpeta “local” aparece trackeada)
+Carpetas locales no visibles por política:
+- `.obsidian/`, `.calibots-kairos-platform/`, `.github/workflows/`
+
+Comando para retirarlas del tracking si ya entraron a Git:
+- `git rm -r --cached .obsidian .calibots-kairos-platform .github/workflows`
